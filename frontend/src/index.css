@@ -1,0 +1,206 @@
+/* ─── RESET & BASE ──────────────────────────────────────────── */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background: #08080F;
+  color: #fff;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ─── SCROLLBAR ─────────────────────────────────────────────── */
+::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+
+::-webkit-scrollbar-track {
+  background: #0F0F1E;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #3730a3;
+  border-radius: 2px;
+}
+
+/* ─── ANIMATIONS ────────────────────────────────────────────── */
+@keyframes countUp {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes pulse-ring {
+
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4);
+  }
+
+  50% {
+    box-shadow: 0 0 0 8px rgba(239, 68, 68, 0);
+  }
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(100%);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes drawArc {
+  from {
+    stroke-dashoffset: 283;
+  }
+
+  to {
+    stroke-dashoffset: var(--target);
+  }
+}
+
+.anim-fade {
+  animation: fadeIn 0.4s ease forwards;
+}
+
+.anim-count {
+  animation: countUp 0.5s ease forwards;
+}
+
+.pulse-critical {
+  animation: pulse-ring 2s infinite;
+}
+
+.toast-enter {
+  animation: slideIn 0.3s ease forwards;
+}
+
+.draw-arc {
+  animation: drawArc 1.2s ease forwards;
+}
+
+/* ─── CARD HOVER ────────────────────────────────────────────── */
+.card-hover {
+  transition: all 0.2s ease;
+}
+
+.card-hover:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 0 20px rgba(124, 58, 237, 0.15);
+}
+
+/* ─── GLASS MORPHISM ────────────────────────────────────────── */
+.glass {
+  background: rgba(15, 15, 30, 0.8);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.glass-light {
+  background: rgba(124, 58, 237, 0.08);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(124, 58, 237, 0.2);
+}
+
+/* ─── BACKGROUND GRID ──────────────────────────────────────── */
+.bg-grid {
+  background-image: radial-gradient(circle, rgba(124, 58, 237, 0.08) 1px, transparent 1px);
+  background-size: 28px 28px;
+}
+
+/* ─── TEXT UTILITIES ────────────────────────────────────────── */
+.gradient-text {
+  background: linear-gradient(135deg, #7C3AED, #a78bfa);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ─── BUTTON ────────────────────────────────────────────────── */
+.btn-primary {
+  background: linear-gradient(135deg, #7C3AED, #6d28d9);
+  transition: all 0.2s;
+}
+
+.btn-primary:hover {
+  opacity: 0.9;
+  transform: translateY(-1px);
+}
+
+/* ─── ROAS COLORS ───────────────────────────────────────────── */
+.roas-green {
+  color: #10B981;
+}
+
+.roas-amber {
+  color: #F59E0B;
+}
+
+.roas-red {
+  color: #EF4444;
+}
+
+/* ─── INPUTS ────────────────────────────────────────────────── */
+input[type=range] {
+  accent-color: #7C3AED;
+}
+
+select option {
+  background: #0F0F1E;
+}
+
+/* ─── UPLOAD ZONE ───────────────────────────────────────────── */
+.upload-zone {
+  border: 2px dashed rgba(124, 58, 237, 0.25);
+  background: rgba(124, 58, 237, 0.03);
+  transition: all 0.3s ease;
+}
+
+.upload-zone:hover {
+  border-color: rgba(124, 58, 237, 0.45);
+  background: rgba(124, 58, 237, 0.06);
+}
+
+.upload-zone-active {
+  border-color: rgba(124, 58, 237, 0.7);
+  background: rgba(124, 58, 237, 0.1);
+  box-shadow: 0 0 40px rgba(124, 58, 237, 0.15);
+}
+
+/* ─── MONO FONT ─────────────────────────────────────────────── */
+.mono {
+  font-family: 'JetBrains Mono', 'SF Mono', 'Fira Code', monospace;
+  font-variant-numeric: tabular-nums;
+}

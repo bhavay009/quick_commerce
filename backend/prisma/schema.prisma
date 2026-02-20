@@ -1,0 +1,72 @@
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model ad_performance {
+  id          String   @id @default(uuid()) @db.Uuid
+  sku_name    String
+  date        DateTime @db.Date
+  spend       Decimal  @default(0) @db.Decimal
+  impressions Int      @default(0)
+  orders      Int      @default(0)
+  revenue     Decimal  @default(0) @db.Decimal
+  roas        Decimal? @db.Decimal
+  status      String   @default("Watch") // Push, Watch, Pause
+  created_at  DateTime @default(now()) @db.Timestamptz(6)
+
+  @@index([date])
+  @@index([status])
+}
+
+model User {
+  id        String   @id @default(uuid()) @db.Uuid
+  email     String   @unique
+  password  String
+  name      String?
+  createdAt DateTime @default(now()) @db.Timestamptz(6)
+  skus      Sku[]
+  imports   ImportHistory[]
+}
+
+model ImportHistory {
+  id              String   @id @default(uuid()) @db.Uuid
+  userId          String   @db.Uuid
+  user            User     @relation(fields: [userId], references: [id])
+  filename        String?
+  row_count       Int      @default(0)
+  sku_count       Int      @default(0)
+  date_range_start DateTime? @db.Date
+  date_range_end  DateTime? @db.Date
+  created_at      DateTime @default(now()) @db.Timestamptz(6)
+  skus            Sku[]
+
+  @@index([userId])
+}
+
+model Sku {
+  id          String   @id @default(uuid()) @db.Uuid
+  userId      String   @db.Uuid
+  user        User     @relation(fields: [userId], references: [id])
+  importId    String?  @db.Uuid
+  import      ImportHistory? @relation(fields: [importId], references: [id], onDelete: Cascade)
+  sku_name    String
+  spend       Decimal  @default(0) @db.Decimal
+  impressions Int      @default(0)
+  clicks      Int      @default(0)
+  ctr         Decimal  @default(0) @db.Decimal
+  cpc         Decimal  @default(0) @db.Decimal
+  orders      Int      @default(0)
+  revenue     Decimal  @default(0) @db.Decimal
+  conversion_rate Decimal @default(0) @db.Decimal
+  placement   String? 
+  created_at  DateTime @default(now()) @db.Timestamptz(6)
+
+  @@index([userId])
+  @@index([importId])
+}

@@ -1,0 +1,40 @@
+date,platform,campaign,sku,impressions,clicks,spend,orders,revenue
+2025-01-22,Zepto,Maggi Search Ads,Maggi 2-Minute Masala 70g,72000,3600,22000,130,78000
+2025-01-22,Zepto,Maggi Search Ads,Maggi Chicken Noodles 71g,38000,1520,15500,35,17500
+2025-01-22,Zepto,Snacks Branded Campaign,Lays Classic Salted 52g,60000,3000,18500,105,47250
+2025-01-22,Zepto,Snacks Branded Campaign,Bingo Mad Angles Tomato,35000,1575,11500,42,18900
+2025-01-22,Zepto,Snacks Branded Campaign,Kurkure Masala Munch 94g,32000,1440,9000,36,16200
+2025-01-23,Zepto,Maggi Search Ads,Maggi 2-Minute Masala 70g,75000,3750,21500,135,81000
+2025-01-23,Zepto,Maggi Search Ads,Maggi Chicken Noodles 71g,36000,1440,16000,32,16000
+2025-01-23,Zepto,Snacks Branded Campaign,Lays Classic Salted 52g,62000,3100,18000,108,48600
+2025-01-23,Zepto,Snacks Branded Campaign,Bingo Mad Angles Tomato,37000,1665,11000,44,19800
+2025-01-23,Zepto,Snacks Branded Campaign,Kurkure Masala Munch 94g,34000,1530,8500,38,17100
+2025-01-24,Zepto,Maggi Search Ads,Maggi 2-Minute Masala 70g,70000,3500,23000,125,75000
+2025-01-24,Zepto,Maggi Search Ads,Maggi Chicken Noodles 71g,35000,1400,15000,30,15000
+2025-01-24,Zepto,Snacks Branded Campaign,Lays Classic Salted 52g,58000,2900,19000,100,45000
+2025-01-24,Zepto,Snacks Branded Campaign,Bingo Mad Angles Tomato,34000,1530,12000,40,18000
+2025-01-24,Zepto,Snacks Branded Campaign,Kurkure Masala Munch 94g,31000,1395,9500,35,15750
+2025-01-22,Blinkit,Beverages Top Shelf,Coca-Cola 750ml,52000,2340,15000,80,40000
+2025-01-22,Blinkit,Beverages Top Shelf,Pepsi 750ml,42000,1890,11500,62,31000
+2025-01-22,Blinkit,Beverages Top Shelf,Sprite 750ml,28000,1260,7500,40,20000
+2025-01-22,Blinkit,Dairy Essentials,Amul Butter 500g,36000,1620,10000,65,32500
+2025-01-22,Blinkit,Dairy Essentials,Mother Dairy Milk 1L,24000,1080,6800,48,24000
+2025-01-23,Blinkit,Beverages Top Shelf,Coca-Cola 750ml,54000,2430,14500,82,41000
+2025-01-23,Blinkit,Beverages Top Shelf,Pepsi 750ml,44000,1980,11000,64,32000
+2025-01-23,Blinkit,Beverages Top Shelf,Sprite 750ml,30000,1350,7200,42,21000
+2025-01-23,Blinkit,Dairy Essentials,Amul Butter 500g,38000,1710,9500,68,34000
+2025-01-23,Blinkit,Dairy Essentials,Mother Dairy Milk 1L,26000,1170,6500,50,25000
+2025-01-24,Blinkit,Beverages Top Shelf,Coca-Cola 750ml,50000,2250,15500,78,39000
+2025-01-24,Blinkit,Beverages Top Shelf,Pepsi 750ml,40000,1800,12000,60,30000
+2025-01-24,Blinkit,Beverages Top Shelf,Sprite 750ml,26000,1170,7800,38,19000
+2025-01-24,Blinkit,Dairy Essentials,Amul Butter 500g,34000,1530,10500,62,31000
+2025-01-24,Blinkit,Dairy Essentials,Mother Dairy Milk 1L,22000,990,7000,46,23000
+2025-01-22,Instamart,Personal Care Push,Dove Shampoo 340ml,20000,900,5500,26,13000
+2025-01-22,Instamart,Personal Care Push,Colgate MaxFresh 150g,17000,765,4500,32,16000
+2025-01-23,Instamart,Personal Care Push,Dove Shampoo 340ml,21000,945,5200,28,14000
+2025-01-23,Instamart,Personal Care Push,Colgate MaxFresh 150g,18000,810,4200,34,17000
+2025-01-24,Instamart,Personal Care Push,Dove Shampoo 340ml,19000,855,5800,25,12500
+2025-01-24,Instamart,Personal Care Push,Colgate MaxFresh 150g,16000,720,4600,30,15000
+2025-01-22,Zepto,Instant Food Launch,Top Ramen Curry 280g,22000,990,7500,25,12500
+2025-01-23,Zepto,Instant Food Launch,Top Ramen Curry 280g,24000,1080,7200,28,14000
+2025-01-24,Zepto,Instant Food Launch,Top Ramen Curry 280g,21000,945,7800,23,11500
