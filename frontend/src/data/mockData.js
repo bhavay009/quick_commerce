@@ -1,5 +1,6 @@
 // ─── CONSTANTS (used for colors / fallback lists) ─────────────
-export const PLATFORMS = ["All Platforms", "Zepto", "Blinkit", "Instamart", "BigBasket Now", "Dunzo"];
+export const PLATFORMS = ["All Platforms", "Platform A", "Blinkit", "Instamart", "BigBasket Now", "Dunzo"];
+
 export const PIE_COLORS = ["#7C3AED", "#10B981", "#F59E0B", "#3B82F6", "#EC4899"];
 
 // ─── HELPERS ──────────────────────────────────────────────────

@@ -22,6 +22,44 @@ exports.getImportHistory = async (req, res) => {
     }
 };
 
+// Restore the latest state for the user
+exports.restoreLatest = async (req, res) => {
+    try {
+        const userId = req.user.userId;
+
+        // 1. Get the most recent import
+        const latestImport = await prisma.importHistory.findFirst({
+            where: { userId },
+            orderBy: { created_at: 'desc' },
+        });
+
+        if (!latestImport) {
+            return res.status(200).json({ hasData: false });
+        }
+
+        // 2. Get all SKUs for this import
+        const skus = await prisma.sku.findMany({
+            where: { importId: latestImport.id }
+        });
+
+        // 3. Get all actions for the user
+        const actions = await prisma.action.findMany({
+            where: { userId },
+            orderBy: { appliedAt: 'desc' }
+        });
+
+        res.status(200).json({
+            hasData: true,
+            latestImport,
+            skus,
+            actions
+        });
+    } catch (error) {
+        console.error('Error restoring latest state:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+};
+
 // Undo the most recent import
 exports.undoLatestImport = async (req, res) => {
     try {

@@ -26,11 +26,11 @@ const MODES = [
     },
     {
         id: "optimize",
-        label: "Optimize",
-        short: "Fix",
+        label: "Actions",
+        short: "Actions",
         icon: TrendingUp,
         color: "#F59E0B",
-        desc: "Fix performance issues",
+        desc: "Decision tracking",
     },
     {
         id: "analyze",

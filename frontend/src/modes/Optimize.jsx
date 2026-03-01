@@ -12,8 +12,8 @@ import { useData } from "../context/DataContext";
 import { fmt, roasColor, prioColor, darkTooltip } from "../data/mockData";
 
 // ═══════════════════════════════════════════════════════════════
-// MODE 2: OPTIMIZE — "Fix performance issues NOW"
-// Decision intelligence tool — actions are logged, not executed.
+// MODE 2: ACTIONS — "Decision intelligence — track what you log"
+// Actions are recommendations tracked over time, not real-time changes.
 // Impact is evaluated only after new data uploads.
 // ═══════════════════════════════════════════════════════════════
 
@@ -40,12 +40,13 @@ const Optimize = ({ toast }) => {
                     <Upload size={32} className="text-violet-400" />
                 </div>
                 <h2 className="text-2xl font-bold text-white mb-2">No Data Yet</h2>
-                <p className="text-gray-500 text-sm max-w-md">Upload your first CSV from the Data Upload tab to see optimization recommendations based on your real ad performance.</p>
+                <p className="text-gray-500 text-sm max-w-md">Upload your first CSV from the Data Upload tab to see recommended actions based on your real performance data.</p>
             </div>
         );
     }
 
-    const totalImpact = ctxRecs.reduce((a, r) => a + r.impact, 0);
+    const totalImpact = ctxRecs.reduce((a, r) => a + (r.isAtoms ? (r.payload?.impact?.loss24h || 0) : (r.impact || 0)), 0);
+    const hasAtomsActions = ctxRecs.some(r => r.isAtoms);
 
     const handleApply = (rec) => {
         applyAction(rec);
@@ -74,7 +75,7 @@ const Optimize = ({ toast }) => {
                 name: s.name.length > 18 ? s.name.slice(0, 18) + "…" : s.name,
                 current: +(s.cpc || 0).toFixed(1),
                 suggested: +(s.roas >= 2.5 ? (s.cpc * 1.15) : s.roas >= 1.5 ? s.cpc : s.cpc * 0.7).toFixed(1),
-                competitor: +(s.cpc * 1.3 + Math.random() * 2).toFixed(1),
+                benchmark: +(s.cpc * 1.3 + Math.random() * 2).toFixed(1),
             }));
     }, [ctxSkus]);
 
@@ -140,11 +141,13 @@ const Optimize = ({ toast }) => {
                             <Zap size={18} className="text-white" />
                         </div>
                         <div>
-                            <span className="text-violet-300 font-bold text-lg">{ctxRecs.length} Actions Available</span>
-                            {ctxRecs.length > 0 && (
+                            <span className="text-violet-300 font-bold text-lg">{ctxRecs.length} Action{ctxRecs.length !== 1 ? 's' : ''} Available</span>
+                            {totalImpact > 0 && (
                                 <>
                                     <span className="text-gray-400 text-sm ml-3">·</span>
-                                    <span className="text-emerald-400 font-bold text-lg ml-3">+{fmt(totalImpact)} projected lift</span>
+                                    <span className={`font-bold text-lg ml-3 ${hasAtomsActions ? 'text-red-400' : 'text-emerald-400'}`}>
+                                        {hasAtomsActions ? `~₹${totalImpact.toLocaleString()} at risk` : `+${fmt(totalImpact)} projected lift`}
+                                    </span>
                                 </>
                             )}
                         </div>
@@ -167,51 +170,165 @@ const Optimize = ({ toast }) => {
                         </div>
                     )}
                     {shown.map(r => (
-                        <div key={r.id} className="glass rounded-xl p-5 card-hover" style={{ borderLeft: `3px solid ${prioColor(r.priority)}` }}>
-                            <div className="flex items-start justify-between">
-                                <div className="flex-1">
-                                    <div className="flex items-center gap-3 mb-2">
-                                        <Badge text={r.priority} color={prioColor(r.priority)} />
-                                        <span className="text-xs text-gray-500">{r.cat}</span>
-                                        {r.platform && r.platform !== "All Platforms" && (
-                                            <><span className="text-xs text-gray-600">·</span>
-                                                <span className="text-xs text-indigo-400 bg-indigo-400/10 px-1.5 py-0.5 rounded">{r.platform}</span></>
-                                        )}
-                                        <span className="text-xs text-gray-600">·</span>
-                                        <span className="text-xs text-gray-500">{r.campaign}</span>
+                        <div key={r.id} className="glass rounded-xl overflow-hidden border border-white/5 transition-all duration-300 hover:border-white/10" style={{ borderLeft: `4px solid ${prioColor(r.priority)}` }}>
+                            {r.isAtoms ? (
+                                <div className="p-6 space-y-6">
+                                    {/* Header */}
+                                    <div className="flex items-start justify-between">
+                                        <div className="space-y-1">
+                                            <div className="flex items-center gap-3 mb-1">
+                                                <Badge text={r.priority} color={prioColor(r.priority)} />
+                                                <span className="text-[10px] text-gray-500 uppercase tracking-widest font-bold">{r.cat}</span>
+                                            </div>
+                                            <h3 className="text-lg font-bold text-white">{r.title}</h3>
+                                        </div>
+                                        <div className="flex gap-2">
+                                            <button onClick={() => handleApply(r)}
+                                                className="px-4 py-2 rounded-lg text-sm font-bold flex items-center justify-center gap-2 transition-all btn-primary text-white shadow-lg shadow-violet-500/20">
+                                                <Check size={14} />Apply & Track
+                                            </button>
+                                            <button onClick={() => handleDismiss(r)}
+                                                className="p-2 rounded-lg text-gray-500 hover:text-red-400 hover:bg-red-400/5 transition-all"><X size={18} /></button>
+                                        </div>
                                     </div>
-                                    <div className="text-white font-semibold text-sm mb-1">{r.title}</div>
-                                    <div className="text-gray-400 text-xs leading-relaxed mb-3">{r.desc}</div>
-                                    {/* Impact metrics — ROAS + GMV mapped */}
-                                    <div className="flex items-center gap-6">
-                                        <div>
-                                            <span className="text-gray-500 text-xs">GMV Impact  </span>
-                                            <span className="text-emerald-400 font-bold mono">+{fmt(r.impact)}</span>
+
+                                    {/* Body Grid */}
+                                    <div className="grid grid-cols-12 gap-6">
+                                        {/* Context & Impact */}
+                                        <div className="col-span-12 lg:col-span-7 space-y-6">
+                                            <div className="grid grid-cols-2 gap-4">
+                                                <div className="glass-light rounded-xl p-4">
+                                                    <div className="text-[10px] text-gray-500 uppercase tracking-wider mb-2 font-bold">Context</div>
+                                                    <div className="space-y-1.5 text-xs text-gray-300">
+                                                        <div className="flex justify-between"><span>SKU:</span> <span className="text-white font-medium">{r.payload.sku}</span></div>
+                                                        <div className="flex justify-between"><span>Location:</span> <span className="text-white font-medium">{r.payload.location}</span></div>
+                                                        <div className="flex justify-between"><span>Analyzed:</span> <span className="text-white font-medium">{r.payload.timeWindow}</span></div>
+                                                    </div>
+                                                </div>
+                                                <div className="glass-light rounded-xl p-4 border border-emerald-500/10">
+                                                    <div className="text-[10px] text-emerald-500 uppercase tracking-wider mb-2 font-bold">Projected Impact</div>
+                                                    <div className="space-y-1.5 text-xs">
+                                                        <div className="flex justify-between"><span className="text-gray-400">GMV Recovered:</span> <span className="text-emerald-400 font-bold">₹{r.payload.impact.recovered.toLocaleString()}</span></div>
+                                                        <div className="flex justify-between"><span className="text-gray-400">ROAS Boost:</span> <span className="text-violet-300 font-bold">{r.payload.impact.roasBefore}x → {r.payload.impact.roasAfter}x</span></div>
+                                                        <div className="flex justify-between"><span className="text-gray-400 italic">Potential Loss:</span> <span className="text-red-400 font-medium">~₹{r.payload.impact.loss24h.toLocaleString()} / 24h</span></div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div>
+                                                <div className="text-[10px] text-gray-500 uppercase tracking-wider mb-3 font-bold">Deltas vs Yesterday</div>
+                                                <div className="grid grid-cols-3 gap-3">
+                                                    {r.payload.deltas.map((d, i) => (
+                                                        <div key={i} className="glass-light rounded-lg p-3">
+                                                            <div className="text-[9px] text-gray-600 uppercase mb-1">{d.label}</div>
+                                                            <div className="text-sm text-white font-bold mb-0.5">{d.val}</div>
+                                                            <div className={`text-[10px] font-medium ${d.delta.includes("-") ? "text-red-400" : "text-emerald-400"}`}>{d.delta}</div>
+                                                        </div>
+                                                    ))}
+                                                </div>
+                                            </div>
+
+                                            <div className="space-y-3">
+                                                <div className="text-[10px] text-gray-500 uppercase tracking-wider font-bold">Root Cause Analysis</div>
+                                                <div className="space-y-2">
+                                                    <div className="text-xs text-white leading-relaxed flex gap-2">
+                                                        <span className="text-violet-400 font-bold flex-shrink-0">PRIMARY:</span>
+                                                        <span>{r.payload.rootCause.primary}</span>
+                                                    </div>
+                                                    <div className="space-y-1 pl-4">
+                                                        {r.payload.rootCause.secondary.map((s, i) => (
+                                                            <div key={i} className="text-[11px] text-gray-500 flex gap-2">
+                                                                <span className="text-gray-700">•</span> {s}
+                                                            </div>
+                                                        ))}
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div>
-                                        <div>
-                                            <span className="text-gray-500 text-xs">ROAS Impact  </span>
-                                            <span className="text-violet-300 font-bold mono">{r.roas_impact}</span>
-                                        </div>
-                                        <div>
-                                            <span className="text-gray-500 text-xs">Confidence  </span>
-                                            <span className="text-white font-bold mono">{r.confidence}%</span>
-                                        </div>
-                                        <div className="flex-1 max-w-[120px]">
-                                            <div className="h-1.5 bg-gray-800 rounded-full overflow-hidden">
-                                                <div className="h-full rounded-full" style={{ width: `${r.confidence}%`, background: "linear-gradient(90deg,#7C3AED,#10B981)" }} />
+
+                                        {/* Recommendations & Urgency */}
+                                        <div className="col-span-12 lg:col-span-5 space-y-6">
+                                            <div className="glass-light rounded-xl p-5 border border-violet-500/10">
+                                                <div className="text-[10px] text-violet-400 uppercase tracking-wider mb-4 font-bold">Recommended Actions</div>
+                                                <div className="space-y-4">
+                                                    {r.payload.recommendations.map((step, i) => (
+                                                        <div key={i} className="flex gap-3">
+                                                            <div className="w-5 h-5 rounded-full bg-violet-500/10 border border-violet-500/20 flex items-center justify-center text-[10px] font-bold text-violet-400 flex-shrink-0">{i + 1}</div>
+                                                            <div className="text-xs text-gray-200 leading-snug">{step}</div>
+                                                        </div>
+                                                    ))}
+                                                </div>
+                                            </div>
+
+                                            <div className="grid grid-cols-2 gap-4">
+                                                <div>
+                                                    <div className="text-[10px] text-gray-500 uppercase tracking-wider mb-2 font-bold">Urgency</div>
+                                                    <div className="text-sm text-amber-400 font-bold mb-1">{r.payload.urgency}</div>
+                                                    <div className="text-[10px] text-gray-500 leading-tight">{r.payload.urgencyReason}</div>
+                                                </div>
+                                                <div>
+                                                    <div className="text-[10px] text-gray-500 uppercase tracking-wider mb-2 font-bold">Confidence</div>
+                                                    <div className="flex items-center gap-2 mb-1">
+                                                        <div className="text-sm text-white font-bold mono">{r.payload.confidence}%</div>
+                                                        <div className="flex-1 h-1.5 bg-gray-800 rounded-full overflow-hidden">
+                                                            <div className="h-full bg-gradient-to-r from-violet-500 to-emerald-500" style={{ width: `${r.payload.confidence}%` }} />
+                                                        </div>
+                                                    </div>
+                                                    <div className="space-y-0.5">
+                                                        {r.payload.evidence.map((ev, i) => (
+                                                            <div key={i} className="text-[9px] text-gray-600 flex gap-1"><span>•</span> {ev}</div>
+                                                        ))}
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                                <div className="flex flex-col gap-2 ml-6">
-                                    <button onClick={() => handleApply(r)}
-                                        className="px-4 py-2 rounded-lg text-sm font-semibold flex items-center gap-2 transition-all btn-primary text-white">
-                                        <Check size={14} />Apply & Track
-                                    </button>
-                                    <button onClick={() => handleDismiss(r)}
-                                        className="px-4 py-2 rounded-lg text-xs text-gray-500 hover:text-red-400 transition-all text-center">Dismiss</button>
+                            ) : (
+                                <div className="p-5 flex items-start justify-between">
+                                    <div className="flex-1">
+                                        <div className="flex items-center gap-3 mb-2">
+                                            <Badge text={r.priority} color={prioColor(r.priority)} />
+                                            <span className="text-xs text-gray-500">{r.cat}</span>
+                                            {r.platform && r.platform !== "All Platforms" && (
+                                                <><span className="text-xs text-gray-600">·</span>
+                                                    <span className="text-xs text-indigo-400 bg-indigo-400/10 px-1.5 py-0.5 rounded">{r.platform}</span></>
+                                            )}
+                                            <span className="text-xs text-gray-600">·</span>
+                                            <span className="text-xs text-gray-500">{r.campaign}</span>
+                                        </div>
+                                        <div className="text-white font-semibold text-sm mb-1">{r.title}</div>
+                                        <div className="text-gray-400 text-xs leading-relaxed mb-3">{r.desc}</div>
+                                        <div className="flex items-center gap-6">
+                                            <div>
+                                                <span className="text-gray-500 text-xs">GMV Impact  </span>
+                                                <span className="text-emerald-400 font-bold mono">+{fmt(r.impact)}</span>
+                                            </div>
+                                            <div>
+                                                <span className="text-gray-500 text-xs">ROAS Impact  </span>
+                                                <span className="text-violet-300 font-bold mono">{r.roas_impact}</span>
+                                            </div>
+                                            <div>
+                                                <span className="text-gray-500 text-xs">Confidence  </span>
+                                                <span className="text-white font-bold mono">{r.confidence}%</span>
+                                            </div>
+                                            <div className="flex-1 max-w-[120px]">
+                                                <div className="h-1.5 bg-gray-800 rounded-full overflow-hidden">
+                                                    <div className="h-full rounded-full" style={{ width: `${r.confidence}%`, background: "linear-gradient(90deg,#7C3AED,#10B981)" }} />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div className="flex flex-col gap-2 ml-6">
+                                        <button onClick={() => handleApply(r)}
+                                            className="px-4 py-2 rounded-lg text-sm font-semibold flex items-center gap-2 transition-all btn-primary text-white">
+                                            <Check size={14} />Apply & Track
+                                        </button>
+                                        <button onClick={() => handleDismiss(r)}
+                                            className="px-4 py-2 rounded-lg text-xs text-gray-500 hover:text-red-400 transition-all text-center">Dismiss</button>
+                                    </div>
                                 </div>
-                            </div>
+                            )}
                         </div>
                     ))}
                 </div>
@@ -311,11 +428,11 @@ const Optimize = ({ toast }) => {
                 </div>
             )}
 
-            {/* ═══ SECTION 2: BID OPTIMIZER ═══════════════════════════ */}
+            {/* ═══ SECTION 2: SPEND STRATEGY ═══════════════════════════ */}
             <div className="grid grid-cols-12 gap-5">
-                {/* Bid Landscape Chart */}
+                {/* Spend Signal Chart */}
                 <div className="col-span-7 glass rounded-xl p-5">
-                    <SectionHeader title="Bid Landscape" subtitle="Current vs Suggested vs Estimated Competitor Bids" />
+                    <SectionHeader title="Spend Strategy" subtitle="Current vs Suggested vs Market Spend Benchmark" />
                     {bidData.length > 0 ? (
                         <ResponsiveContainer width="100%" height={220}>
                             <BarChart data={bidData} margin={{ top: 5, right: 5, bottom: 20, left: 0 }}>
@@ -324,22 +441,22 @@ const Optimize = ({ toast }) => {
                                 <YAxis tick={{ fill: "#4b5563", fontSize: 10 }} tickLine={false} axisLine={false} tickFormatter={v => `₹${v}`} />
                                 <Tooltip {...darkTooltip} formatter={(v, n) => [`₹${v}`, n]} />
                                 <Legend wrapperStyle={{ fontSize: 11 }} />
-                                <Bar dataKey="current" name="Current Bid" fill="#7C3AED" radius={[4, 4, 0, 0]} />
+                                <Bar dataKey="current" name="Current Spend" fill="#7C3AED" radius={[4, 4, 0, 0]} />
                                 <Bar dataKey="suggested" name="Suggested" fill="#10B981" radius={[4, 4, 0, 0]} />
-                                <Bar dataKey="competitor" name="Est. Competitor" fill="rgba(245,158,11,0.5)" radius={[4, 4, 0, 0]} />
+                                <Bar dataKey="benchmark" name="Market Benchmark" fill="rgba(245,158,11,0.5)" radius={[4, 4, 0, 0]} />
                             </BarChart>
                         </ResponsiveContainer>
                     ) : (
-                        <div className="h-[220px] flex items-center justify-center text-gray-500 text-sm">No bid data available</div>
+                        <div className="h-[220px] flex items-center justify-center text-gray-500 text-sm">No spend data available</div>
                     )}
                 </div>
 
-                {/* Keyword Bid Recommendations */}
+                {/* SKU Spend Signals */}
                 <div className="col-span-5 glass rounded-xl p-5">
-                    <SectionHeader title="Keyword Bids" subtitle={`${kwData.length} SKUs analyzed`} />
+                    <SectionHeader title="SKU Spend Signals" subtitle={`${kwData.length} SKUs analyzed`} />
                     <div className="space-y-2">
                         {kwData.length === 0 ? (
-                            <div className="text-center text-gray-500 text-sm py-8">No keyword data yet</div>
+                            <div className="text-center text-gray-500 text-sm py-8">No SKU data yet</div>
                         ) : kwData.map((k, i) => {
                             const change = k.sug === 0 ? "Remove" : `${k.sug > k.curr ? "+" : ""}${((k.sug - k.curr) / (k.curr || 1) * 100).toFixed(0)}%`;
                             const chColor = k.sug === 0 ? "#EF4444" : k.sug > k.curr ? "#10B981" : "#F59E0B";
@@ -404,7 +521,7 @@ const Optimize = ({ toast }) => {
 
                 {/* Hour Heatmap */}
                 <div className="col-span-7 glass rounded-xl p-5">
-                    <SectionHeader title="Hour-of-Day ROAS Heatmap" subtitle="Darker = Higher ROAS · Set bid rules from here" />
+                    <SectionHeader title="Hour-of-Day ROAS Heatmap" subtitle="Darker = Higher ROAS · Apply spend rules for peak hours" />
                     <div className="overflow-x-auto">
                         <div className="flex gap-1 mb-1">
                             <div className="w-8" />
@@ -426,7 +543,7 @@ const Optimize = ({ toast }) => {
                     </div>
                     <div className="mt-3 text-xs text-amber-300 glass-light rounded-lg px-3 py-2">
                         📌 Lunch rush 12–2PM weekdays averages {lunchRoas}x ROAS vs {restRoas}x rest of day.
-                        <button onClick={() => toast("Bid rule created: +35% bids Mon-Fri 12-2PM")} className="ml-2 text-violet-400 hover:text-violet-300 underline">Set Bid Rule →</button>
+                        <button onClick={() => toast("Spend rule logged: +35% Mon-Fri 12-2PM")} className="ml-2 text-violet-400 hover:text-violet-300 underline">Log Spend Rule →</button>
                     </div>
                 </div>
             </div>

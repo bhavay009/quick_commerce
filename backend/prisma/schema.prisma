@@ -32,6 +32,7 @@ model User {
   createdAt DateTime @default(now()) @db.Timestamptz(6)
   skus      Sku[]
   imports   ImportHistory[]
+  actions   Action[]
 }
 
 model ImportHistory {
@@ -45,6 +46,7 @@ model ImportHistory {
   date_range_end  DateTime? @db.Date
   created_at      DateTime @default(now()) @db.Timestamptz(6)
   skus            Sku[]
+  actions         Action[]
 
   @@index([userId])
 }
@@ -70,3 +72,26 @@ model Sku {
   @@index([userId])
   @@index([importId])
 }
+
+model Action {
+  id              String   @id @default(uuid()) @db.Uuid
+  userId          String   @db.Uuid
+  user            User     @relation(fields: [userId], references: [id])
+  importId        String?  @db.Uuid
+  import          ImportHistory? @relation(fields: [importId], references: [id], onDelete: Cascade)
+  type            String
+  title           String
+  desc            String?
+  impact          Decimal? @db.Decimal
+  confidence      Int?
+  state           String   @default("applied") // applied, evaluated, dismissed
+  baselineMetrics Json?
+  afterMetrics    Json?
+  appliedAt       DateTime @default(now()) @db.Timestamptz(6)
+  evaluatedAt     DateTime? @db.Timestamptz(6)
+  outcome         String? // improved, declined, neutral
+
+  @@index([userId])
+  @@index([importId])
+}
+

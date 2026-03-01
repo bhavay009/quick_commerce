@@ -1,0 +1,17 @@
+timestamp,city,hub_id,seller_id,seller_name,product_id,product_name,category,price_inr,stock_available,orders_last_hour,orders_today,avg_delivery_time_min,delivery_status,sla_status,demand_trend,surge_multiplier,alert_type,alert_severity,action_recommended
+2026-02-24 11:00,Bangalore,HUB01,S001,FreshKart Dark Store,P101,Milk 1L,Dairy,59,95,52,355,10.4,Delivered,Good,Increasing,1.06,None,None,None
+2026-02-24 11:00,Bangalore,HUB01,S001,FreshKart Dark Store,P102,Bread Brown,Grocery,43,60,28,355,10.9,Delivered,Good,Stable,1.01,None,None,None
+2026-02-24 11:00,Bangalore,HUB01,S001,FreshKart Dark Store,P109,Curd 500g,Dairy,47,22,34,355,11.8,Preparing,Warning,High Surge,1.08,Stock Risk,High,Replenish urgently
+2026-02-24 11:00,Bangalore,HUB01,S001,FreshKart Dark Store,P110,Eggs 12 pack,Dairy,74,15,41,355,12.3,Out for Delivery,Warning,High Surge,1.10,Demand Surge,Critical,Increase inventory
+2026-02-24 11:00,Mumbai,HUB02,S002,QuickGro Mart,P103,Apple 1kg,Fruits,185,48,29,295,13.4,Delivered,At Risk,Stable,1.05,None,None,None
+2026-02-24 11:00,Mumbai,HUB02,S002,QuickGro Mart,P104,Banana 1 dozen,Fruits,56,12,33,295,14.2,Cancelled,At Risk,Increasing,1.02,Stock Risk,High,Immediate restock
+2026-02-24 11:00,Mumbai,HUB02,S002,QuickGro Mart,P111,Orange 1kg,Fruits,98,30,25,295,13.7,Delivered,At Risk,Stable,1.00,None,None,None
+2026-02-24 11:00,Mumbai,HUB02,S002,QuickGro Mart,P112,Tomato 1kg,Vegetables,40,18,37,295,14.8,Preparing,At Risk,High Surge,1.06,SLA Breach,High,Add riders
+2026-02-24 11:00,Delhi,HUB03,S003,DailyDash Store,P105,Paneer 200g,Dairy,98,26,31,225,15.6,Delivered,Warning,High Surge,1.08,Demand Surge,High,Increase stock
+2026-02-24 11:00,Delhi,HUB03,S003,DailyDash Store,P106,Butter 100g,Dairy,62,58,21,225,14.9,Delivered,Warning,Stable,1.01,None,None,None
+2026-02-24 11:00,Delhi,HUB03,S003,DailyDash Store,P113,Cheese Slices,Dairy,125,18,29,225,16.1,Out for Delivery,Warning,High Surge,1.07,Stock Risk,High,Replenish stock
+2026-02-24 11:00,Delhi,HUB03,S003,DailyDash Store,P114,Ghee 500ml,Dairy,290,10,19,225,16.4,Preparing,Warning,Stable,1.00,None,None,None
+2026-02-24 11:00,Hyderabad,HUB04,S004,SpeedBasket Hub,P107,Maggi Noodles,Instant Food,15,260,61,445,9.3,Delivered,Excellent,High Surge,1.10,Demand Surge,Critical,Boost stock by 35%
+2026-02-24 11:00,Hyderabad,HUB04,S004,SpeedBasket Hub,P108,Coke 750ml,Beverages,41,130,36,445,9.8,Delivered,Excellent,Increasing,1.04,None,None,None
+2026-02-24 11:00,Hyderabad,HUB04,S004,SpeedBasket Hub,P115,Pepsi 750ml,Beverages,40,95,31,445,10.1,Delivered,Good,Stable,1.01,None,None,None
+2026-02-24 11:00,Hyderabad,HUB04,S004,SpeedBasket Hub,P116,Chips Large,Snacks,67,48,44,445,10.6,Preparing,Good,Increasing,1.05,None,None,None

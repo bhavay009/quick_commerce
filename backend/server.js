@@ -8,6 +8,7 @@ const skuRoutes = require('./routes/sku.routes');
 const importRoutes = require('./routes/import.routes');
 const insightsRoutes = require('./routes/insights.routes');
 const optimizationRoutes = require('./routes/optimization.routes');
+const actionRoutes = require('./routes/action.routes');
 
 const app = express();
 const PORT = process.env.PORT || 5001;
@@ -20,6 +21,7 @@ app.use('/api/skus', skuRoutes);
 app.use('/api/imports', importRoutes);
 app.use('/api/insights', insightsRoutes);
 app.use('/api/optimization', optimizationRoutes);
+app.use('/api/actions', actionRoutes);
 
 
 
