@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useCallback, useEffect } from "react";
 import { useAuth } from "./AuthContext";
+import API_BASE from "../config/api";
 import { fmt } from "../data/mockData";
 import { createSnapshot, findPreviousSnapshot, compareSnapshots, normalizeRows } from "../data/snapshotEngine";
 
@@ -600,7 +601,7 @@ export function DataProvider({ children }) {
             if (!token || !user) return;
             setIsRestoring(true);
             try {
-                const res = await fetch('http://localhost:5001/api/imports/restore', {
+                const res = await fetch(`${API_BASE}/api/imports/restore`, {
                     headers: { 'Authorization': `Bearer ${token}` }
                 });
                 const d = await res.json();
@@ -691,7 +692,7 @@ export function DataProvider({ children }) {
                     orders: Math.round((parseFloat(row[mapping.revenue]) || 0) / 500)
                 }));
 
-                await fetch('http://localhost:5001/api/skus/bulk', {
+                await fetch(`${API_BASE}/api/skus/bulk`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -710,7 +711,7 @@ export function DataProvider({ children }) {
                 // Sync evaluations to backend
                 updated.forEach(async (a) => {
                     if (a.state === "evaluated" && a.id && !a.id.startsWith("action-")) {
-                        await fetch(`http://localhost:5001/api/actions`, {
+                        await fetch(`${API_BASE}/api/actions`, {
                             method: 'POST',
                             headers: {
                                 'Content-Type': 'application/json',
@@ -764,7 +765,7 @@ export function DataProvider({ children }) {
 
     const clearData = useCallback(async () => {
         if (token) {
-            await fetch('http://localhost:5001/api/imports/latest', {
+            await fetch(`${API_BASE}/api/imports/latest`, {
                 method: 'DELETE',
                 headers: { 'Authorization': `Bearer ${token}` }
             });
@@ -805,7 +806,7 @@ export function DataProvider({ children }) {
         };
 
         if (token) {
-            const res = await fetch('http://localhost:5001/api/actions', {
+            const res = await fetch(`${API_BASE}/api/actions`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -828,7 +829,7 @@ export function DataProvider({ children }) {
     const dismissAction = useCallback(async (recId) => {
         const existing = appliedActions.find(a => a.recId === recId);
         if (existing && existing.id && !existing.id.startsWith("action-") && token) {
-            await fetch(`http://localhost:5001/api/actions/${existing.id}`, {
+            await fetch(`${API_BASE}/api/actions/${existing.id}`, {
                 method: 'DELETE',
                 headers: { 'Authorization': `Bearer ${token}` }
             });

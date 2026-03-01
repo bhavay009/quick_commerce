@@ -1,0 +1,35 @@
+services:
+  # ─── Backend API (Express + Prisma) ───────────────────────────
+  - type: web
+    name: zepto-backend
+    runtime: node
+    region: oregon
+    rootDir: backend
+    buildCommand: npm install && npx prisma generate
+    startCommand: npm start
+    envVars:
+      - key: DATABASE_URL
+        sync: false  # Set manually in Render dashboard
+      - key: JWT_SECRET
+        generateValue: true
+      - key: NODE_ENV
+        value: production
+
+  # ─── Frontend (Vite Static Site) ──────────────────────────────
+  - type: web
+    name: zepto-frontend
+    runtime: static
+    rootDir: frontend
+    buildCommand: npm install && npm run build
+    staticPublishPath: dist
+    headers:
+      - path: /*
+        name: Cache-Control
+        value: public, max-age=0, must-revalidate
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
+    envVars:
+      - key: VITE_API_URL
+        sync: false  # Set to your backend URL, e.g. https://zepto-backend.onrender.com

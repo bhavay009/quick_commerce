@@ -1,3 +1,4 @@
+import API_BASE from '../config/api';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Sidebar from '../components/Sidebar';
@@ -33,7 +34,7 @@ const AddSKU = () => {
         }
 
         try {
-            const response = await fetch('http://localhost:5001/api/skus', {
+            const response = await fetch(`${API_BASE}/api/skus`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

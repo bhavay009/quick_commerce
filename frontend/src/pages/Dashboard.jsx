@@ -1,3 +1,4 @@
+import API_BASE from '../config/api';
 import React, { useState, useEffect } from 'react';
 import Sidebar from '../components/Sidebar';
 import KPICard from '../components/KPICard';
@@ -23,7 +24,7 @@ const Dashboard = () => {
         const fetchSkus = async () => {
             try {
                 const token = localStorage.getItem('token');
-                const response = await fetch('http://localhost:5001/api/skus', {
+                const response = await fetch(`${API_BASE}/api/skus`, {
                     headers: {
                         'Authorization': `Bearer ${token}`,
                     },

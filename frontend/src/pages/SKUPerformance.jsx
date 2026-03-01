@@ -1,3 +1,4 @@
+import API_BASE from '../config/api';
 import React, { useState, useEffect } from 'react';
 import Sidebar from '../components/Sidebar';
 import { Search, Filter, Download } from 'lucide-react';
@@ -12,7 +13,7 @@ const SKUPerformance = () => {
         const fetchSkus = async () => {
             try {
                 const token = localStorage.getItem('token');
-                const response = await fetch('http://localhost:5001/api/skus', {
+                const response = await fetch(`${API_BASE}/api/skus`, {
                     headers: {
                         'Authorization': `Bearer ${token}`,
                     },
@@ -111,8 +112,8 @@ const SKUPerformance = () => {
                                                 <td className="px-6 py-4 font-medium text-white">{sku.sku_name}</td>
                                                 <td className="px-6 py-4">
                                                     <span className={`px-3 py-1 rounded-full text-xs font-medium border ${sku.status === 'Push' ? 'bg-green-900/30 text-green-400 border-green-800' :
-                                                            sku.status === 'Pause' ? 'bg-red-900/30 text-red-400 border-red-800' :
-                                                                'bg-yellow-900/30 text-yellow-400 border-yellow-800'
+                                                        sku.status === 'Pause' ? 'bg-red-900/30 text-red-400 border-red-800' :
+                                                            'bg-yellow-900/30 text-yellow-400 border-yellow-800'
                                                         }`}>
                                                         {sku.status}
                                                     </span>
@@ -121,8 +122,8 @@ const SKUPerformance = () => {
                                                 <td className="px-6 py-4 text-right text-gray-300">{formatCurrency(sku.revenue)}</td>
                                                 <td className="px-6 py-4 text-right">
                                                     <span className={`font-medium ${sku.roas >= 2.0 ? 'text-green-400' :
-                                                            sku.roas < 1.0 ? 'text-red-400' :
-                                                                'text-yellow-400'
+                                                        sku.roas < 1.0 ? 'text-red-400' :
+                                                            'text-yellow-400'
                                                         }`}>
                                                         {sku.roas}x
                                                     </span>

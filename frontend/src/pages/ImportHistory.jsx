@@ -1,3 +1,4 @@
+import API_BASE from '../config/api';
 import React, { useState, useEffect } from 'react';
 import Sidebar from '../components/Sidebar';
 import { History, Trash2, Calendar, FileText } from 'lucide-react';
@@ -15,7 +16,7 @@ const ImportHistory = () => {
     const fetchImports = async () => {
         try {
             const token = localStorage.getItem('token');
-            const response = await fetch('http://localhost:5001/api/imports', {
+            const response = await fetch(`${API_BASE}/api/imports`, {
                 headers: { 'Authorization': `Bearer ${token}` },
             });
             if (response.ok) {
@@ -35,7 +36,7 @@ const ImportHistory = () => {
         setUndoing(true);
         try {
             const token = localStorage.getItem('token');
-            const response = await fetch('http://localhost:5001/api/imports/latest', {
+            const response = await fetch(`${API_BASE}/api/imports/latest`, {
                 method: 'DELETE',
                 headers: { 'Authorization': `Bearer ${token}` },
             });

@@ -1,4 +1,5 @@
 
+import API_BASE from '../config/api';
 import React, { useState } from 'react';
 import Layout from '../components/Layout';
 
@@ -32,7 +33,7 @@ const DataInput = () => {
             // Let's fix both.
 
             const isBulk = Array.isArray(payload);
-            const url = isBulk ? 'http://localhost:5001/api/skus/bulk' : 'http://localhost:5001/api/skus';
+            const url = isBulk ? `${API_BASE}/api/skus/bulk` : `${API_BASE}/api/skus`;
             const body = isBulk ? JSON.stringify({ skus: payload, filename: 'Upload from Data Input' }) : JSON.stringify({
                 sku_name: payload.sku,
                 spend: payload.spend,

@@ -1,3 +1,4 @@
+import API_BASE from '../config/api';
 import React, { useState, useEffect } from 'react';
 import { Eye, MousePointerClick, AlertCircle, TrendingDown, MapPin } from 'lucide-react';
 
@@ -9,7 +10,7 @@ const ConversionInsights = () => {
         const fetchInsights = async () => {
             try {
                 const token = localStorage.getItem('token');
-                const response = await fetch('http://localhost:5001/api/optimization/insights', {
+                const response = await fetch(`${API_BASE}/api/optimization/insights`, {
                     headers: { 'Authorization': `Bearer ${token}` },
                 });
                 if (response.ok) {
